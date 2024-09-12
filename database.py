@@ -52,11 +52,15 @@ def get_client_id(conn, f_name, l_name, email):
 
 
 def change_client(conn, id, f_name=None, l_name=None, email=None):
-    arg_list = {'first_name': f_name, "lust_name": l_name, 'email': email}
+    arg_list = {'first_name': f_name, 'last_name': l_name, 'email': email}
     for key, arg in arg_list.items():
         if arg:
             with conn.cursor() as cur:
-                cur.execute(SQL("UPDATE client SET {}=%s WHERE client_id=%s").format(Identifier(key)), (arg, id))
+                cur.execute(SQL("""
+                UPDATE client
+                SET {}=%s
+                WHERE client_id=%s;
+                """).format(Identifier(key)), (arg, id))
             conn.commit()
 
 
@@ -79,7 +83,7 @@ def delete_client(conn, id):
 
 
 def find_client(conn, f_name=None, l_name=None, email=None, number=None):
-    arg_list = {'first_name': f_name, "last_name": l_name, 'email': email, 'number': number}
+    arg_list = {'first_name': f_name, 'last_name': l_name, 'email': email, 'number': number}
     for key, arg in arg_list.items():
         if arg:
             with conn.cursor() as cur:
